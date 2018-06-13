@@ -12,8 +12,11 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    Eigen::Matrix<double, MATRIX_SIZE, MATRIX_SIZE> matrix_NN;
+//    Eigen::Matrix<double, MATRIX_SIZE, MATRIX_SIZE> matrix_NN;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_NN;
     matrix_NN = Eigen::MatrixXd::Random(MATRIX_SIZE, MATRIX_SIZE);
+    // make the coefficient matrix positive definite
+    matrix_NN = matrix_NN.transpose() * matrix_NN;
     Eigen::Matrix<double, MATRIX_SIZE, 1> v_Nd;
     v_Nd = Eigen::MatrixXd::Random(MATRIX_SIZE, 1);
 
