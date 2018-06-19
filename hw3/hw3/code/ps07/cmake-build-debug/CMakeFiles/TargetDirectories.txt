@@ -1,3 +1,0 @@
-/home/binx/Documents/Self-Learning/vSLAM-HW/hw3/hw3/code/ps07/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/binx/Documents/Self-Learning/vSLAM-HW/hw3/hw3/code/ps07/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/binx/Documents/Self-Learning/vSLAM-HW/hw3/hw3/code/ps07/cmake-build-debug/CMakeFiles/ps06.dir
