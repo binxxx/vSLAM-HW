@@ -1,4 +1,4 @@
-//
+ //
 // Created by 高翔 on 2017/12/15.
 //
 
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string image_file = "./test.png";   // 请确保路径正确
+string image_file = "../test.png";   // 请确保路径正确
 
 int main(int argc, char **argv) {
 
@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
 
     cv::Mat image = cv::imread(image_file,0);   // 图像是灰度图，CV_8UC1
     int rows = image.rows, cols = image.cols;
+    cout << rows << " " << cols << endl;
     cv::Mat image_undistort = cv::Mat(rows, cols, CV_8UC1);   // 去畸变以后的图
 
     // 计算去畸变后图像的内容
@@ -28,7 +29,15 @@ int main(int argc, char **argv) {
             double u_distorted = 0, v_distorted = 0;
             // TODO 按照公式，计算点(u,v)对应到畸变图像中的坐标(u_distorted, v_distorted) (~6 lines)
             // start your code here
-            
+            double x = (u - cx) / fx;
+            double y = (v - cy) / fy;
+            double r = hypot(x, y);
+            double x_distorted = x * (1 + k1 * pow(r, 2) + k2 * pow(r, 4)) + 2 * p1 * x * y +
+                    p2 * (pow(r, 2) + 2 * pow(x, 2));
+            double y_distorted = y * (1 + k1 * pow(r, 2) + k2 * pow(r, 4)) +
+                    p1 * (pow(r, 2) + 2 * pow(y, 2)) + 2 * p2 * x * y;
+            u_distorted = fx * x_distorted + cx;
+            v_distorted = fy * y_distorted + cy;
             // end your code here
 
             // 赋值 (最近邻插值)
@@ -41,6 +50,7 @@ int main(int argc, char **argv) {
 
     // 画图去畸变后图像
     cv::imshow("image undistorted", image_undistort);
+    cv::imshow("original image", image);
     cv::waitKey();
 
     return 0;
