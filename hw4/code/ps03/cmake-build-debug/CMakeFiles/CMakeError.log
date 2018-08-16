@@ -1,0 +1,66 @@
+Determining if the Q_WS_WIN exist failed with the following output:
+Change Dir: /home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ca5b2/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ca5b2.dir/build.make CMakeFiles/cmTC_ca5b2.dir/build
+make[1]: Entering directory '/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_ca5b2.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++   -I/usr/include/qt4  -std=c++11    -o CMakeFiles/cmTC_ca5b2.dir/CheckSymbolExists.cxx.o -c /home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_WIN’ was not declared in this scope
+   return ((int*)(&Q_WS_WIN))[argc];
+                   ^
+CMakeFiles/cmTC_ca5b2.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_ca5b2.dir/CheckSymbolExists.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_ca5b2.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory '/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_ca5b2/fast' failed
+make: *** [cmTC_ca5b2/fast] Error 2
+
+File /home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_WIN
+  return ((int*)(&Q_WS_WIN))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_QWS exist failed with the following output:
+Change Dir: /home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_65128/fast"
+/usr/bin/make -f CMakeFiles/cmTC_65128.dir/build.make CMakeFiles/cmTC_65128.dir/build
+make[1]: Entering directory '/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_65128.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++   -I/usr/include/qt4  -std=c++11    -o CMakeFiles/cmTC_65128.dir/CheckSymbolExists.cxx.o -c /home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_QWS’ was not declared in this scope
+   return ((int*)(&Q_WS_QWS))[argc];
+                   ^
+CMakeFiles/cmTC_65128.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_65128.dir/CheckSymbolExists.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_65128.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory '/home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_65128/fast' failed
+make: *** [cmTC_65128/fast] Error 2
+
+File /home/binx/Documents/Self-Learning/vSLAM-HW/hw4/code/ps03/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_QWS
+  return ((int*)(&Q_WS_QWS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
