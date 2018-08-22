@@ -9,7 +9,7 @@
 
 using namespace Eigen;
 
-#include <sophus/so3.hpp>
+#include <sophus/so3.h>
 
 #include <iostream>
 
@@ -29,6 +29,17 @@ int main(int argc, char **argv) {
 
     // SVD and fix sigular values
     // START YOUR CODE HERE
+    JacobiSVD<MatrixXd> svd(E, ComputeThinU | ComputeThinV);
+//    cout << svd.singularValues()(1) << endl;
+
+    Vector3d values;
+    values << (svd.singularValues()(0)+svd.singularValues()(1))/2.0, (svd.singularValues()(0)
+                                                                      +svd.singularValues()(1))/2.0, 0;
+    Matrix3d Sigma = values.asDiagonal();
+    cout << Sigma << endl;
+
+    AngleAxisd rotation_vec1(M_PI / 2, Vector3d(0,0,1));
+    AngleAxisd rotation_vec2(-M_PI / 2, Vector3d(0,0,1));
 
     // END YOUR CODE HERE
 
@@ -39,16 +50,24 @@ int main(int argc, char **argv) {
 
     Matrix3d R1;
     Matrix3d R2;
+
+    t_wedge1 = svd.matrixU() * rotation_vec1.toRotationMatrix() * Sigma * (svd.matrixU()).transpose();
+    t_wedge2 = svd.matrixU() * rotation_vec2.toRotationMatrix() * Sigma * (svd.matrixU()).transpose();
+
+    R1 = svd.matrixU() * rotation_vec1.toRotationMatrix() * (svd.matrixV()).transpose();
+    R2 = svd.matrixU() * rotation_vec2.toRotationMatrix() * (svd.matrixV()).transpose();
     // END YOUR CODE HERE
 
     cout << "R1 = " << R1 << endl;
     cout << "R2 = " << R2 << endl;
-    cout << "t1 = " << Sophus::SO3d::vee(t_wedge1) << endl;
-    cout << "t2 = " << Sophus::SO3d::vee(t_wedge2) << endl;
+    cout << "t1 = " << Sophus::SO3::vee(t_wedge1) << endl;
+    cout << "t2 = " << Sophus::SO3::vee(t_wedge2) << endl;
 
     // check t^R=E up to scale
     Matrix3d tR = t_wedge1 * R1;
     cout << "t^R = " << tR << endl;
+    cout << "E & -E are equivalent!!!" << endl;
+    // -E & E are the same!!!
 
     return 0;
 }
