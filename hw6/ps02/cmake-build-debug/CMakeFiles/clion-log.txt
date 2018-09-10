@@ -1,0 +1,77 @@
+/opt/clion-2018.1.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/binx/Documents/Self-Learning/vSLAM-HW/hw6/ps02
+CMake Warning at CMakeLists.txt:7 (find_package):
+  Found package configuration file:
+
+    /usr/local/share/OpenCV/OpenCVConfig.cmake
+
+  but it set OpenCV_FOUND to FALSE so package "OpenCV" is considered to be
+  NOT FOUND.
+
+
+-- Configuring done
+CMake Error in CMakeLists.txt:
+  Imported target "opencv_viz" includes non-existent path
+
+    "/home/binx/include/opencv"
+
+  in its INTERFACE_INCLUDE_DIRECTORIES.  Possible reasons include:
+
+  * The path was deleted, renamed, or moved to another location.
+
+  * An install or uninstall procedure did not complete successfully.
+
+  * The installation package was faulty and references files it does not
+  provide.
+
+
+
+CMake Error in CMakeLists.txt:
+  Imported target "opencv_viz" includes non-existent path
+
+    "/home/binx/include/opencv"
+
+  in its INTERFACE_INCLUDE_DIRECTORIES.  Possible reasons include:
+
+  * The path was deleted, renamed, or moved to another location.
+
+  * An install or uninstall procedure did not complete successfully.
+
+  * The installation package was faulty and references files it does not
+  provide.
+
+
+
+CMake Error in CMakeLists.txt:
+  Imported target "opencv_viz" includes non-existent path
+
+    "/home/binx/include/opencv"
+
+  in its INTERFACE_INCLUDE_DIRECTORIES.  Possible reasons include:
+
+  * The path was deleted, renamed, or moved to another location.
+
+  * An install or uninstall procedure did not complete successfully.
+
+  * The installation package was faulty and references files it does not
+  provide.
+
+
+
+CMake Error in CMakeLists.txt:
+  Imported target "opencv_viz" includes non-existent path
+
+    "/home/binx/include/opencv"
+
+  in its INTERFACE_INCLUDE_DIRECTORIES.  Possible reasons include:
+
+  * The path was deleted, renamed, or moved to another location.
+
+  * An install or uninstall procedure did not complete successfully.
+
+  * The installation package was faulty and references files it does not
+  provide.
+
+
+
+-- Generating done
+-- Build files have been written to: /home/binx/Documents/Self-Learning/vSLAM-HW/hw6/ps02/cmake-build-debug

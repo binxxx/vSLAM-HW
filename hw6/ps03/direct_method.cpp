@@ -146,7 +146,7 @@ void DirectPoseEstimationSingleLayer(
                     Eigen::Vector2d J_img_pixel;    // image gradients
 
                     // total jacobian
-                    Vector6d J=0;
+                    Vector6d J;
 
                     H += J * J.transpose();
                     b += -error * J;
