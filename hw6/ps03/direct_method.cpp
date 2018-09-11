@@ -16,9 +16,9 @@ double fx = 718.856, fy = 718.856, cx = 607.1928, cy = 185.2157;
 // 基线
 double baseline = 0.573;
 // paths
-string left_file = "./left.png";
-string disparity_file = "./disparity.png";
-boost::format fmt_others("./%06d.png");    // other files
+string left_file = "../left.png";
+string disparity_file = "../disparity.png";
+boost::format fmt_others("../%06d.png");    // other files
 
 // useful typedefs
 typedef Eigen::Matrix<double, 6, 6> Matrix6d;
@@ -120,6 +120,12 @@ void DirectPoseEstimationSingleLayer(
     int nGood = 0;  // good projections
     VecVector2d goodProjection;
 
+    // Calculate K and KINV
+    Eigen::Matrix3d K;
+    K << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0;
+    Eigen::Matrix3d Kinv;
+    Kinv = K.inverse();
+
     for (int iter = 0; iter < iterations; iter++) {
         nGood = 0;
         goodProjection.clear();
@@ -133,6 +139,23 @@ void DirectPoseEstimationSingleLayer(
             // compute the projection in the second image
             // TODO START YOUR CODE HERE
             float u =0, v = 0;
+
+            Eigen::Vector3d u1(px_ref[i](0), px_ref[i](1), 1.0); // homogeneous 2D coord in first frame
+            Eigen::Vector3d P1 = Kinv * u1;
+            P1 = P1 * (depth_ref[i] / P1(2));    // 3D point in the first coord
+            Eigen::Vector4d P1_homo(P1(0), P1(1), P1(2), 1.0);  // 3D homo point in the first coord
+            Eigen::Vector4d P2_homo = T21.matrix() * P1_homo;   // 3D homo point in second coord
+            if (P2_homo(2) < 0)
+                continue;
+            Eigen::Vector3d P2(P2_homo(0), P2_homo(1), P2_homo(2));     // 3D point in the second coord
+            Eigen::Vector3d u2 = K * P2;
+            u = u2(0) / u2(2);
+            v = u2(1) / u2(2);
+            if (u < half_patch_size + 1 || u > img1.cols - half_patch_size - 1 ||
+                    v < half_patch_size + 1 || v > img1.rows - half_patch_size - 1) {
+                continue;
+            }
+
             nGood++;
             goodProjection.push_back(Eigen::Vector2d(u, v));
 
@@ -140,13 +163,17 @@ void DirectPoseEstimationSingleLayer(
             for (int x = -half_patch_size; x < half_patch_size; x++)
                 for (int y = -half_patch_size; y < half_patch_size; y++) {
 
-                    double error =0;
+                    double error = (double)GetPixelValue(img1, px_ref[i](0) + x, px_ref[i](1) + y) -
+                            (double)GetPixelValue(img2, u + x, v + y);
 
                     Matrix26d J_pixel_xi;   // pixel to \xi in Lie algebra
+                    J_pixel_xi << fx / P2(2), 0, -fx * P2(0) / (P2(2) * P2(2)), -fx * P2(0) * P2(1) / (P2(2) * P2(2)), fx + fx * P2(0) * P2(0) / (P2(2) * P2(2)), -fx * P2(1) / P2(2),
+                            0, fy / P2(2), -fy * P2(1) / (P2(2) * P2(2)), -fy - fy * P2(1) * P2(1) / (P2(2) * P2(2)), fy * P2(0) * P2(1) / (P2(2) * P2(2)), fy * P2(0) / P2(2);
                     Eigen::Vector2d J_img_pixel;    // image gradients
-
+                    J_img_pixel(0) = (GetPixelValue(img2, u + x + 1, v + y) - GetPixelValue(img2, u + x - 1, v + y)) / 2;
+                    J_img_pixel(1) = (GetPixelValue(img2, u + x, v + y + 1) - GetPixelValue(img2, u + x, v + y - 1)) / 2;
                     // total jacobian
-                    Vector6d J;
+                    Vector6d J = - J_pixel_xi.transpose() * J_img_pixel;;
 
                     H += J * J.transpose();
                     b += -error * J;
@@ -158,6 +185,7 @@ void DirectPoseEstimationSingleLayer(
         // solve update and put it into estimation
         // TODO START YOUR CODE HERE
         Vector6d update;
+        update = H.ldlt().solve(b);
         T21 = Sophus::SE3::exp(update) * T21;
         // END YOUR CODE HERE
 
@@ -211,6 +239,13 @@ void DirectPoseEstimationMultiLayer(
     // create pyramids
     vector<cv::Mat> pyr1, pyr2; // image pyramids
     // TODO START YOUR CODE HERE
+    for (int i = 0; i < 4; i++) {
+        cv::Mat temp_img1, temp_img2;
+        cv::resize(img1, temp_img1, cv::Size(), scales[i], scales[i]);
+        cv::resize(img2, temp_img2, cv::Size(), scales[i], scales[i]);
+        pyr1.push_back(temp_img1);
+        pyr2.push_back(temp_img2);
+    }
 
     // END YOUR CODE HERE
 
@@ -223,6 +258,10 @@ void DirectPoseEstimationMultiLayer(
 
         // TODO START YOUR CODE HERE
         // scale fx, fy, cx, cy in different pyramid levels
+        fx = fxG * scales[level];
+        fy = fyG * scales[level];
+        cx = cxG * scales[level];
+        cy = cyG * scales[level];
 
         // END YOUR CODE HERE
         DirectPoseEstimationSingleLayer(pyr1[level], pyr2[level], px_ref_pyr, depth_ref, T21);
