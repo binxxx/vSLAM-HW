@@ -88,6 +88,23 @@ public:
 
     virtual void computeError() override {
         // TODO START YOUR CODE HERE
+        const VertexSBAPointXYZ* vertexPw = static_cast<const VertexSBAPointXYZ* >(vertex(0));
+        const VertexSophus* vertexTcw = static_cast<const VertexSophus* >(vertex(1));
+        Vector3d Pc = vertexTcw->estimate() * vertexPw->estimate();
+        float u = Pc[0]/Pc[2] * fx + cx;
+        float v = Pc[1]/Pc[2] * fy + cy;
+        if(!bInImage(u-3,v-3,w,h) || !bInImage(u+2,v+2,w,h)) {
+            this->setLevel(1);
+            for(int n=0;n<16;n++)
+                _error[n] = 0;
+        } else {
+            for(int i = -2; i<2; i++) {
+                for(int j = -2; j<2; j++) {
+                    int num = 4 * i + j + 10;
+                    _error[num] = origColor[num] - GetPixelValue(targetImg, u+i, v+j);
+                }
+            }
+        }
         // compute projection error ...
         // END YOUR CODE HERE
     }
@@ -163,6 +180,31 @@ int main(int argc, char **argv) {
 
     // TODO add vertices, edges into the graph optimizer
     // START YOUR CODE HERE
+    for(int i = 0; i < points.size(); i++) {
+        VertexSBAPointXYZ* vertexPw = new VertexSBAPointXYZ();
+        vertexPw->setEstimate(points[i]);
+        vertexPw->setId(i);
+        vertexPw->setMarginalized(true);
+        optimizer.addVertex(vertexPw);
+    }
+    for(int j = 0; j < poses.size(); j++) {
+        VertexSophus* vertexTcw = new VertexSophus();
+        vertexTcw->setEstimate(poses[j]);
+        vertexTcw->setId(j + points.size());
+        optimizer.addVertex(vertexTcw);
+    }
+
+    for(int c = 0; c < poses.size(); c++)
+        for(int p = 0; p < points.size(); p++) {
+            EdgeDirectProjection* edge = new EdgeDirectProjection(color[p],images[c]);
+            edge->setVertex(0,dynamic_cast<VertexSBAPointXYZ*>(optimizer.vertex(p)));
+            edge->setVertex(1,dynamic_cast<VertexSophus*>(optimizer.vertex(c + points.size())));
+            edge->setInformation(Matrix<double,16,16>::Identity());
+            RobustKernelHuber* rk = new RobustKernelHuber;
+            rk->setDelta(1.0);
+            edge->setRobustKernel(rk);
+            optimizer.addEdge(edge);
+        }
 
     // END YOUR CODE HERE
 
@@ -172,6 +214,14 @@ int main(int argc, char **argv) {
 
     // TODO fetch data from the optimizer
     // START YOUR CODE HERE
+    for (int c = 0; c < poses.size(); c++) {
+        for (int p = 0; p < points.size(); p++) {
+            Vector3d Pw = dynamic_cast<VertexSBAPointXYZ*>(optimizer.vertex(p))->estimate();
+            points[p] = Pw;
+            SE3 Tcw = dynamic_cast<VertexSophus*>(optimizer.vertex(c + points.size()))->estimate();
+            poses[c] = Tcw;
+        }
+    }
     // END YOUR CODE HERE
 
     // plot the optimized points and poses

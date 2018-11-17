@@ -1,0 +1,19 @@
+/opt/clion-2018.1.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/binx/Documents/Self-Learning/vSLAM-HW/hw7/ps03
+CMake Error at CMakeLists.txt:9 (FIND_PACKAGE):
+  By not providing "FindG2O.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "G2O", but
+  CMake did not find one.
+
+  Could not find a package configuration file provided by "G2O" with any of
+  the following names:
+
+    G2OConfig.cmake
+    g2o-config.cmake
+
+  Add the installation prefix of "G2O" to CMAKE_PREFIX_PATH or set "G2O_DIR"
+  to a directory containing one of the above files.  If "G2O" provides a
+  separate development package or SDK, be sure it has been installed.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/binx/Documents/Self-Learning/vSLAM-HW/hw7/ps03/cmake-build-debug/CMakeFiles/CMakeOutput.log".
